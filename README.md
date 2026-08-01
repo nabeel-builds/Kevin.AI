@@ -144,10 +144,10 @@ BACKEND/
 Add screenshots or GIFs here.
 
 ```
-![Alt text](images/screenshot2.png)
+![Alt text](Downloads/screenshot2.png)
 
 
-![Alt text](images/screenshot1.png)
+![Alt text](Downloads/screenshot1.png)
 
 
 ```
