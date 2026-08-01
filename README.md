@@ -144,9 +144,11 @@ BACKEND/
 Add screenshots or GIFs here.
 
 ```
-<img width="1365" height="599" alt="Screenshot 2026-08-01 120753" src="https://github.com/user-attachments/assets/143bc569-9c8e-4775-8a9e-4e33bcb5915e" />
+<img width="1365" height="599" alt="Screenshot 2026-08-01 120753" src="https://github.com/user-attachments/assets/ec9beae3-10f5-4b3a-b841-3d76a8e50592" />
 
-<img width="1365" height="599" alt="Screenshot 2026-08-01 120753" src="https://github.com/user-attachments/assets/7c3dd98d-fb11-497a-a32b-efb19a96ca71" />
+
+<img width="1364" height="581" alt="Screenshot 2026-08-01 121217" src="https://github.com/user-attachments/assets/9c59bac8-b1d2-4f26-9925-ed14c65d5244" />
+
 
 ```
 
