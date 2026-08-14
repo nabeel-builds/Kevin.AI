@@ -1,7 +1,7 @@
-import { createContext, useContext, useState } from "react";
+import { createContext,  useState } from "react";
 
 // Create the UserContext
-export const UserContext = createContext()
+export const UserContext = createContext() 
 
 // Create a provider component
 export const UserProvider = ({ children }) => {
