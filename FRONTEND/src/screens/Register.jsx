@@ -24,10 +24,9 @@ const Register = () => {
       const res = await axios.post(`${import.meta.env.VITE_API_URL}/users/register`, { username, email, password })
       localStorage.setItem('token', res.data.token)
       setUser(res.data.user)
-      navigate('/')
+      navigate('/home')
     } catch (err) {
       console.log(err.response.data)
-      console.log(data)
     }
 
 
