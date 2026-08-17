@@ -86,9 +86,17 @@ export const logoutController = async (req, res) => {
 
     try {
 
-        const token = req.cookies.token || req.headers.authorization.split(' ')[1] 
+        const token = req.cookies.token || req.headers.authorization?.split(' ')[1] 
+        
+        if(!token){
+            return res.status(400).json({
+                message: "Token is not here"
+            })
+        }
 
-        redisClient.set(token, 'logout', 'EX', 60 * 60 * 24)
+        await redisClient.set(token, 'logout', {EX: 60 * 60 * 24})
+
+        res.clearCookie('token')
 
         res.status(200).json({
             message: 'Logout Successfully'
@@ -96,7 +104,7 @@ export const logoutController = async (req, res) => {
 
     } catch (err) {
         console.log(err)
-        res.status(400).send(err.message)
+        res.status(500).send(err.message)
     }
 
 }

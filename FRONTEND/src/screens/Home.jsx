@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { UserContext } from '../context/user.context'
 import { useContext } from 'react'
 import axios from '../config/axios.js'
@@ -98,7 +98,7 @@ const Home = () => {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 p-5">
           <div className="bg-[#1a1a1a] p-8 rounded-2xl shadow-2xl w-full max-w-md border border-white/10">
 
             {/* Title */}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useRef } from 'react'
+import { useEffect, useState, useContext, useRef } from 'react'
 import { data, useLocation } from 'react-router-dom'
 import axios from '../config/axios.js'
 import { initializeSocket, receiveMessage, sendMessage } from '../config/socket.js'
@@ -31,6 +31,7 @@ const Project = () => {
 
     const navigate = useNavigate()
 
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
 
     const saveMessages = (newMessages) => {
         setMessages(newMessages)
@@ -41,7 +42,7 @@ const Project = () => {
 
     useEffect(() => {
 
-  
+
 
         initializeSocket(project._id)
 
@@ -61,7 +62,7 @@ const Project = () => {
         const fetchProjectsById = async () => {
             try {
                 const res = await axios.get(`${import.meta.env.VITE_API_URL}/projects/get-project/${location.state.project._id}`)
-           
+
                 setProject(res.data.project)
             } catch (err) {
                 console.log(err)
@@ -74,7 +75,7 @@ const Project = () => {
         const fetchUsers = async () => {
             try {
                 const res = await axios.get(`${import.meta.env.VITE_API_URL}/users/all`)
-          
+
                 setUsers(res.data.users)
             } catch (err) {
                 console.log(err)
@@ -123,7 +124,7 @@ const Project = () => {
 
 
 
-    
+
 
         if (!user) {
             console.log("User null hai - ruko")
@@ -139,7 +140,7 @@ const Project = () => {
         }
 
         sendMessage('project-message', messageData)
-        saveMessages([...messages, messageData]) 
+        saveMessages([...messages, messageData])
 
 
         setMessage('')
@@ -152,38 +153,103 @@ const Project = () => {
         messageBox.current.scrollTop = messageBox.current.scrollHeight
     }
 
+    const handleLogout = async () => {
+        const token = localStorage.getItem('token')
+
+        try {
+            await fetch(`${import.meta.env.VITE_API_URL}/users/logout`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            localStorage.removeItem('token')
+
+            navigate('/login')
+        } catch (err) {
+            console.log('Logout failed', err)
+        }
+    }
+
 
     return (
         <main className='h-screen w-screen flex'>
             <section id='LEFT' className='flex flex-col h-screen min-w-screen bg-slate-300 relative'>
-                <header id='header' className={`flex justify-between items-center p-2 h-20 px-4 w-full bg-slate-100 absolute z-10 top-0 ${isModalOpen ? "hidden" : "block"}`}>
-                 
-                    {/* RIGHT — Back button */}
-                    <button
-                        onClick={() => navigate('/home')}
-                        className="flex items-center bg-slate-300 px-3 py-1 rounded-md text-[15px] text-black cursor-pointer"
-                    >
-                       ‹ Back 
-                    </button>
+                <header id='header' className={`flex justify-between items-center p-2 h-20 px-4 w-full bg-slate-100 absolute z-10 top-0 ${isModalOpen ? "hidden" : "flex"}`}>
 
-                    {/* CENTER — Add Collaborator */}
+    {/* Back button */}
+    <button
+        onClick={() => navigate('/home')}
+        className="flex items-center bg-slate-300 px-3 py-1 rounded-md text-[15px] text-black cursor-pointer"
+    >
+        ‹ Back
+    </button>
+
+    {/* CENTER — Add Collaborator (sirf desktop) */}
+    <button
+        className='hidden md:flex gap-2 items-center cursor-pointer'
+        onClick={() => setIsModalOpen(true)}>
+        <i className="ri-add-fill cursor-pointer"></i>
+        <p>Add Collaborator</p>
+    </button>
+
+    {/* RIGHT */}
+    <div className='flex items-center gap-3'>
+
+        {/* Desktop — Logout + Group */}
+        <button
+            onClick={handleLogout}
+            className="hidden md:flex items-center bg-slate-300 px-3 py-1 rounded-md text-[15px] text-black cursor-pointer"
+        >
+            Logout
+        </button>
+
+        <button
+            onClick={() => setIsSidePanelOpen(!isSidePanelOpen)}
+            className='hidden md:block p-2 cursor-pointer'>
+            <i className="ri-group-fill text-xl"></i>
+        </button>
+
+        {/* Mobile — Hamburger only */}
+        <div className="md:hidden relative">
+            <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="p-2 cursor-pointer bg-slate-300 rounded-md"
+            >
+                <i className={`text-xl ${isMenuOpen ? 'ri-close-line' : 'ri-menu-line'}`}></i>
+            </button>
+
+            {isMenuOpen && (
+                <div className="absolute right-0 top-12 bg-white shadow-lg rounded-md w-52 flex flex-col z-50">
                     <button
-                        className='flex gap-2 items-center'
-                        onClick={() => setIsModalOpen(true)}>
-                        <i className="ri-add-fill cursor-pointer"></i>
+                        className='flex gap-2 items-center p-3 hover:bg-slate-100 cursor-pointer'
+                        onClick={() => { setIsModalOpen(true); setIsMenuOpen(false) }}>
+                        <i className="ri-add-fill"></i>
                         <p>Add Collaborator</p>
                     </button>
 
-                      {/* LEFT — profile icon */}
                     <button
-                        onClick={() => setIsSidePanelOpen(!isSidePanelOpen)}
-                        className='p-2 cursor-pointer'>
-                        <i className="ri-group-fill text-xl"></i>
+                        className='flex gap-2 items-center p-3 hover:bg-slate-100 cursor-pointer'
+                        onClick={() => { setIsSidePanelOpen(!isSidePanelOpen); setIsMenuOpen(false) }}>
+                        <i className="ri-group-fill"></i>
+                        <p>Collaborators</p>
                     </button>
 
-                    
+                    <button
+                        className='flex gap-2 items-center p-3 hover:bg-slate-100 cursor-pointer text-red-500'
+                        onClick={handleLogout}>
+                        <i className="ri-logout-box-line"></i>
+                        <p>Logout</p>
+                    </button>
+                </div>
+            )}
+        </div>
 
-                </header>
+    </div>
+
+</header>
 
                 <div className="conversation-area grow flex flex-col pt-20 pb-10 bg-slate-300 h-full relative">
 
@@ -254,7 +320,7 @@ const Project = () => {
                         {project.users && project.users.map(user => {
 
                             return (
-                                <div  className="users flex gap-2 items-center cursor-pointer hover:bg-slate-200 p-2">
+                                <div className="users flex gap-2 items-center cursor-pointer hover:bg-slate-200 p-2">
                                     <div className='aspect-square rounded-full w-fit h-fit flex items-center justify-center p-5 text-white bg-slate-600'>
                                         <i className="ri-user-fill absolute"></i>
                                     </div>
@@ -295,7 +361,7 @@ const Project = () => {
                                         <i className="ri-user-fill absolute"></i>
                                     </div>
                                     <h1 className='font-semibold text-lg'>{user?.username || user}</h1>
-                                    
+
                                 </div>
                             ))}
                         </div>
